@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class Main {
 
-    private final static String url = "jdbc:mysql://localhost:3306/db_nations";
+    private final static String url = "jdbc:mysql://localhost:3306/db-nations";
     private final static String user = "root";
     private final static String password = "Jack1997";
 
@@ -17,21 +17,24 @@ public class Main {
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
 
+            try(PreparedStatement ps = conn.prepareStatement(sql)){
 
-           try(PreparedStatement ps = conn.prepareStatement(sql)){
-
-               ResultSet rs = ps.executeQuery();
-                while (rs.next()){
-                    String nomePaese = rs.getString("nome_paese");
-                    String idPaese = rs.getString("country_id");
-                    String nomeRegione = rs.getString("nome_regione");
-                    String nomeContinente = rs.getString("nome_continente");
-                    System.out.println(nomePaese);
-                }
+               try(ResultSet rs = ps.executeQuery()){
+                   System.out.println("COUNTRY" +" | " + "ID" + " | " + "REGIONE"+ " | " + "CONTINENT");
+                   while (rs.next()) {
+                       String nomePaese = rs.getString("nome_paese");
+                       int idPaese = rs.getInt("country_id");
+                       String nomeRegione = rs.getString("nome_regione");
+                       String nomeContinente = rs.getString("nome_continente");
+                       System.out.println(nomePaese + " | " + idPaese + " | "+ nomeRegione + " | " + nomeContinente);
+                   }
+               }
            }
 
         } catch (SQLException e){
-            System.out.println("unable to connect");
+
+            System.out.println("unable to connect" );
+            e.printStackTrace();
         }
 
 
