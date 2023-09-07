@@ -3,18 +3,20 @@ package org.lessons.nations;
 import java.sql.*;
 
 public class Main {
+
+    private final static String url = "jdbc:mysql://localhost:3306/db_nations";
+    private final static String user = "root";
+    private final static String password = "Jack1997";
+
+    private final static String sql = "select country_id, countries.name as nome_paese, regions.name as nome_regione, continents.name as nome_continente from countries \n" +
+            "join regions on regions.region_id = countries.region_id\n" +
+            "join continents on continents.continent_id = regions.region_id \n" +
+            "order by nome_paese;";
+
     public static void main(String[] args) {
 
-        String url = "jdbc:mysql://localhost:3306/db_university";
-        String user = "root";
-        String password = "Jack1997";
-
-
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            String sql = "select country_id, countries.name as nome_paese, regions.name as nome_regione, continents.name as nome_continente from countries \n" +
-                    "join regions on regions.region_id = countries.region_id\n" +
-                    "join continents on continents.continent_id = regions.region_id \n" +
-                    "order by nome_paese;";
+
 
            try(PreparedStatement ps = conn.prepareStatement(sql)){
 
