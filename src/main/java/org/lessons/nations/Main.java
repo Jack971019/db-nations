@@ -82,6 +82,7 @@ public class Main {
                 }
             }
         } catch (SQLException e){
+
             System.out.println("errore");
         }
 
