@@ -16,7 +16,7 @@ public class Main {
             "where countries.name like ?\n" +
             "order by nome_paese;";
 
-    private final static String squlStats = "select languages.`language`, countries.name, country_stats.population, country_stats.`year`, country_stats.gdp  from countries\n" +
+    private final static String sqlStats = "select languages.`language` as lingua, countries.name as nome, country_stats.population popolazione, country_stats.`year` as anno, country_stats.gdp as GDP  from countries\n" +
             "join country_stats on country_stats.country_id = countries.country_id\n" +
             "join country_languages on country_languages.country_id = countries.country_id\n" +
             "join languages on languages.language_id = country_languages.language_id\n" +
@@ -49,32 +49,44 @@ public class Main {
                    }
                }
            }
-
-            System.out.println("scegli un id del paese per visualizzare maggiori informaiozni");
-            String idChoice = scan.nextLine();
-
-            try(PreparedStatement ps = conn.prepareStatement(squlStats)){
-                ps.setString(1, idChoice);
-
-                try(ResultSet rs = ps.executeQuery()){
-
-                        System.out.println("informazioni sul paese con id" + idChoice + ":");
-                        String nomePaese = rs.getString("paese");
-                        String lingua = rs.getString("lingua");
-                        int popolazione = rs.getInt("popolazione");
-                        int anno = rs.getInt("year");
-                        int gdp = rs.getInt("GDP");
-                        System.out.println(nomePaese + "lingue" + lingua + "popolazione" + popolazione + " anno " + anno + "GDP" + gdp);
-                }
-            }
-
-
         } catch (SQLException e){
 
             System.out.println("unable to connect" );
             e.printStackTrace();
-
         }
+
+        try(Connection con = DriverManager.getConnection(url, user, password)) {
+
+            System.out.println("scegli un id del paese per visualizzare maggiori informaiozni");
+            String idChoice = scan.nextLine();
+
+            System.out.println(idChoice);
+
+            try (PreparedStatement ps = con.prepareStatement(sqlStats)) {
+
+                 ps.setString(1, "%"+ idChoice + "%");
+
+                try (ResultSet rs = ps.executeQuery()) {
+
+                    System.out.println("informazioni sul paese con id" + idChoice + ":");
+                    String nomePaese = rs.getString("nome");
+                    System.out.println(nomePaese);
+                    String lingua = rs.getString("lingua");
+                    System.out.println(lingua);
+                    int popolazione = rs.getInt("popolazione");
+                    System.out.println(popolazione);
+                    int anno = rs.getInt("year");
+                    System.out.println(anno);
+                    int gdp = rs.getInt("GDP");
+                    System.out.println(gdp);
+                }
+            }
+        } catch (SQLException e){
+            System.out.println("errore");
+        }
+
+
+
 
 
     }
